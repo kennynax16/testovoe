@@ -1,8 +1,20 @@
-import {createApp} from "vue"; // Импортирует CSS Bootstrap
-import PostComponent from "./components/PostComponent.vue";
-import 'bootstrap'; // Импортирует JavaScript Bootstrap
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { createRouter, createWebHistory } from 'vue-router';
 
 
-const app = createApp(PostComponent);
-app.mount('#app');
+const routes = [
+
+    {
+        path: '/card/:id',  // Используем строку для пути
+        component: () => import('./components/ShowComponent.vue'),
+        name: 'show'
+    }
+
+
+];
+
+const router = createRouter({
+    history: createWebHistory(),
+    routes,
+});
+
+export default router;

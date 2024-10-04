@@ -1,50 +1,45 @@
 <template>
-    <div class="w-25">
-        <form>
-            <div class="mb-3">
-                <input type="text" class="form-control" v-model="name" id="name" placeholder="name">
-            </div>
-            <div class="mb-3">
-                <input type="text" class="form-control" v-model="age" id="age" placeholder="age">
-            </div>
-            <div class="mb-3">
-                <input type="text" class="form-control" v-model="job" id="job" placeholder="job">
-            </div>
-            <div class="mb-3">
-                <input @click.prevent="addPerson" class="btn btn-primary" value="добавить">
-            </div>
-
-        </form>
-    </div>
+    <v-container>
+        <v-row>
+            <card-component v-for="item in card" :item="item"></card-component>
+        </v-row>
+    </v-container>
 </template>
 
-<script>
 
-import axios from 'axios';
+<script>
+import CardComponent from "./CardComponent.vue";
+import ShowComponent from "./ShowComponent.vue";
+import axios from "axios";
 
 export default {
+    name: "IndexComponent",
+
+    components: {
+        CardComponent,
+        ShowComponent
+
+    },
+
     data() {
         return {
-            name: null,
-            age: null,
-            job: null,
-        }
+            card: null,
 
+        }
     },
 
+    mounted() {
+        this.getProduct()
+    },
     methods: {
-        addPerson() {
-            axios.post('/api/people', {name: this.name, age: this.age, job: this.job})
+        getProduct() {
+            axios.get('/api/card/get')
                 .then(res => {
-                    console.log(res);
+                    this.card = res.data
                 })
-                .catch(res=> {
-                    console.log(res)
-                })
-        }
-    },
+        },
+    }
 
-    name: "CreateComponent"
 }
 </script>
 
