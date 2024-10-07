@@ -10,6 +10,7 @@
 <script>
 import CardComponent from "./CardComponent.vue";
 import ShowComponent from "./ShowComponent.vue";
+
 import axios from "axios";
 
 export default {

@@ -18,7 +18,8 @@
 
 <script>
 import router from "../router";
-import axios from "axios";
+import {th} from "vuetify/locale";
+
 
 export default {
     name: 'CardComponent',
@@ -36,7 +37,7 @@ export default {
 
     methods: {
         editProduct(id) {
-            this.$router.push({ name: 'show', params: { id } }); // Переход к компоненту редактирования
+            this.$router.push({ name: 'show', params: {  id: id} }); // Переход к компоненту редактирования
         },
     }
 }

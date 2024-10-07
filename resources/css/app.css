@@ -1,0 +1,42 @@
+.max_opacity-100 {
+    background: #000000;
+    color: black;
+    opacity: 100 !important;
+}
+
+.button-a {
+    color: black;
+}
+
+.custom-rounded-card {
+    border-radius: 20px !important; /* Установите нужное значение для закругления */
+}
+
+.shadow-12 {
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25)!important; /* Глубокая тень */
+}
+.button-text {
+    color: white!important;
+    font-family: 'Helvetica', sans-serif!important;
+    font-size: 1rem!important; /* Установка размера шрифта */
+    font-weight: 900!important; /* Установка жирности, если нужно */
+    text-transform: none!important;
+
+}
+
+.custom-title{
+    margin-bottom: -22px !important;
+    font-family: 'Helvetica', sans-serif!important;
+    font-size: 1rem!important; /* Установка размера шрифта */
+    font-weight: 900 !important; /* Установка жирности, если нужно */
+}
+.custom-button{
+
+    height: 60px!important;  /* Увеличьте высоту кнопки */
+    padding-bottom: 10px;
+}
+
+.custom-img{
+    margin: 0 10px 15px 10px!important;;
+}
+
