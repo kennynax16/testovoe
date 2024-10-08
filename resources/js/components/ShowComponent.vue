@@ -2,9 +2,12 @@
     <div class="custom-container">
         <v-card class="main-card  bordered-card strong-shadow mb-5 mt-5 " style="border-radius: 30px;">
             <!-- Заголовок карточки -->
-            <v-card-title class="text-center bordered-text strong-shadow mb-3 pa-3"><h2 v-if="product">{{
-                    product.name
-                }}</h2>
+            <v-card-title class="text-center bordered-text strong-shadow mb-3 pa-3">
+                <h2 v-if="product">
+                    {{
+                        product.name
+                    }}
+                </h2>
             </v-card-title>
             <!-- Картинка -->
             <div class="image-container mb-5">
@@ -16,29 +19,48 @@
                 {{ product.description }}
             </v-card-text>
         </v-card>
-        <v-card class="main-card bordered-card strong-shadow my-margin" style="border-radius: 30px;">
+        <v-card class="main-card bordered-card strong-shadow mb-5" style="border-radius: 30px;">
             <div class="button-container pa-3 mb-5">
-                <button   class="btn strong-shadow py-2 px-5">Изменить название</button>
-                <button  class="btn strong-shadow py-2 px-5">Изменить картинку</button>
-                <button  class="btn strong-shadow py-2 px-5">Изменить название</button>
+                <button @click="showNameInput = !showNameInput"
+                        :class="showNameInput ? 'btn-false strong-shadow py-2 px-5' : 'btn strong-shadow py-2 px-5' "
+                >Изменить название
+                </button>
+                <button @click="showPhotoInput = !showPhotoInput"
+                        :class="showPhotoInput ? 'btn-false strong-shadow py-2 px-5' : 'btn strong-shadow py-2 px-5' "
+                >Изменить картинку
+                </button>
+                <button @click="showDescriptionInput = !showDescriptionInput"
+                        :class="showDescriptionInput ? 'btn-false strong-shadow py-2 px-5' : 'btn strong-shadow py-2 px-5' "
+                >Изменить название
+                </button>
             </div>
             <!-- Поля ввода -->
-            <v-text-field v-model="name"
-                          class="custom-input"
-                          label="Введите новое название"
-                          outlined
+            <v-text-field
+                v-if="showNameInput"
+                v-model="name"
+                class="custom-input"
+                label="Введите новое название"
+                outlined
             ></v-text-field>
 
-            <v-text-field v-model="description"
-                          class="custom-input "
-                          label="Введите новое описание"
-                          outlined
+            <v-text-field
+                v-if="showDescriptionInput"
+                v-model="description"
+                class="custom-input "
+                label="Введите новое описание"
+                outlined
             ></v-text-field>
 
             <!-- Инпут для загрузки файла -->
-            <v-file-input prepend-icon="mdi mdi-ab-testing" append-icon="mdi mdi-ab-testing" base-color="info"
-                          style="width: 100%" label="File input"></v-file-input>
-            <v-btn  @click="" color="primary" style="width: 95%" class="mt-4 mb-3">
+
+            <v-file-input v-model="imageFile" v-if="showPhotoInput" prepend-icon="mdi mdi-ab-testing"
+                          append-icon="mdi mdi-ab-testing"
+                          base-color="info"
+                          style="width: 100%" label="File input"
+            ></v-file-input>
+            <v-btn v-if="showNameInput || showDescriptionInput || showPhotoInput"
+                   @click.prevent="UpdateProduct(product.id)"
+                   color="primary" style="width: 95%" class="mt-4 mb-3">
                 Сохранить
             </v-btn>
 
@@ -54,9 +76,13 @@ export default {
     data() {
         return {
             product: null, // Здесь будут данные о товаре
-            name: null, // Для нового названия
-            description: null, // Для нового описания
-            urlPhoto: null, // Для загрузки файла
+            name: '', // Для нового названия
+            description: '', // Для нового описания
+            imageFile: null,
+            /* urlPhoto: null, // Для загрузки файла*/
+            showNameInput: false, // Для отображения поля ввода названия
+            showDescriptionInput: false, // Для отображения поля ввода описания
+            showPhotoInput: false, // Для отображения поля ввода картинки
         };
     },
 
@@ -78,13 +104,41 @@ export default {
         },
 
         UpdateProduct(id) {
-            axios.patch(`/api/card/get/${id}`, {name: this.name, description: this.description, urlPhoto: this.urlPhoto})
+            console.log("Name:", this.name);
+            console.log("Description:", this.description);
+            console.log("Image File:", this.imageFile);
+
+            const formData = new FormData();
+            /*formData.append('name', this.name);
+            formData.append('description', this.description);*/
+
+            if (this.imageFile) {
+                formData.append('file', this.imageFile);
+            }
+
+            console.log('=============================')
+            console.log(formData)
+
+            axios.put(`/api/card/put/${id}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data', // Указываем заголовок
+                }
+            })
                 .then(res => {
-                    console.log(res.data);
                     alert('Данные успешно обновлены!');
+                    this.getProduct(); // Обновляем информацию о продукте после успешного обновления
                 })
+                .catch(error => {
+                    if (error.response && error.response.status === 422) {
+                        console.error("Validation errors:", error.response.data.errors);
+                    } else {
+                        console.error("An error occurred:", error.message);
+                    }
+                });
+        }
+
     }
-}}
+}
 
 </script>
 
@@ -144,6 +198,16 @@ img {
 .btn {
     /*   padding: 10px 20px; !* Отступы внутри кнопок *!*/
     background-color: white; /* Цвет фона кнопок */
+
+    border-radius: 20px; /* Скругляем углы */
+    cursor: pointer; /* Иконка указателя при наведении */
+}
+
+
+.btn-false {
+    /*   padding: 10px 20px; !* Отступы внутри кнопок *!*/
+    background-color: green; /* Цвет фона кнопок */
+    color: white;
 
     border-radius: 20px; /* Скругляем углы */
     cursor: pointer; /* Иконка указателя при наведении */
